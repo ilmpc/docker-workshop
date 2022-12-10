@@ -1,0 +1,12 @@
+{
+  "forwardPorts": [
+    8000
+  ],
+  "extensions": [
+    "ms-azuretools.vscode-docker",
+    "mhutchie.git-graph",
+    "ms-python.python",
+    "ms-python.vscode-pylance"
+  ],
+  "postCreateCommand": "pip3 install --user -r requirements.txt"
+}
