@@ -1,8 +1,8 @@
-from typing import Union
-
+from redis import Redis
 from fastapi import FastAPI
 
 app = FastAPI()
+r = Redis(host='localhost', port=6379, db=0)
 
 
 @app.get("/")
@@ -10,6 +10,11 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/items/{key}")
+def read_item(key: str):
+    return r.get(key)
+
+
+@app.post("/items/{key}")
+def set_item(key: str, item: str):
+    return r.set(key, item)
