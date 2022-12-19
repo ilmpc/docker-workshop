@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  backend:
+    build: .
+    ports:
+      - 8000:8000
+    depends_on:
+      - redis
+    environment:
+      - DB_HOST=redis
+      - DB_PORT=6379
+  redis:
+    image: redis
+  proxy:
+    image: caddy:alpine
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./ui:/html

@@ -1,8 +1,13 @@
+import os
 from redis import Redis
 from fastapi import FastAPI
 
 app = FastAPI()
-r = Redis(host='localhost', port=6379, db=0)
+r = Redis(
+    host=os.getenv("DB_HOST"),
+    port=int(os.getenv("DB_PORT")),
+    db=0
+)
 
 
 @app.get("/")
