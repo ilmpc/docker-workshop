@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  # docker build -t docker-example/backend . 
+  # docker run -p8000:8000 -e DB_HOST=redis docker-example/backend
+  backend:
+    build: backend
+    environment:
+      - DB_HOST=redis
+    depends_on:
+      - redis
+
+  # docker run redis:alpine
+  redis:
+    image: "redis:alpine"
+  
+  # docker run -v ./Caddyfile:/etc/caddy/Caddyfile:ro -v ./ui:/html caddy
+  proxy:
+    image: "caddy"
+    volumes:
+      - ./proxy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./frontend:/html
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    

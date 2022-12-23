@@ -1,7 +1,7 @@
 :3000 {
     route /api/* {
   	    uri strip_prefix /api
-	    reverse_proxy 172.17.0.2:8000
+	    reverse_proxy backend:8000
     }
     route {
         root * /html
