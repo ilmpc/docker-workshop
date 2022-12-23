@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <!-- Key-value form -->
+  <form id="key-value-form" class="m-4">
+    <!-- Key input -->
+    <div class="flex mb-4 gap-4 items-center">
+      <label for="key-input" class="block text-gray-700 text-sm font-bold">Key:</label>
+      <input id="key-input" type="text"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        required>
+    </div>
+
+    <!-- Value input -->
+    <div class="flex mb-4 gap-4 items-center">
+      <label for=" value-input" class="block text-gray-700 text-sm font-bold">Value:</label>
+      <input id="value-input" type="text"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        required>
+    </div>
+
+    <!-- Write and read buttons -->
+    <div class="flex justify-end gap-4 items-center">
+      <button id="write-button" type="submit"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        Write
+      </button>
+      <button id="read-button" type="button"
+        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        Read
+      </button>
+    </div>
+  </form>
+
+  <!-- Key-value display -->
+  <div id="key-value-display" class="hidden m-4">
+    <!-- Key display -->
+    <div class="flex mb-4">
+      <p class="block text-gray-700 text-sm font-bold mb-2">Key:</p>
+      <p id="display-key" class="ml-2 text-gray-700 text-sm"></p>
+    </div>
+
+    <!-- Value display -->
+    <div class="flex mb-4">
+      <p class="block text-gray-700 text-sm font-bold mb-2">Value:</p>
+      <p id="display-value" class="ml-2 text-gray-700 text-sm"></p>
+    </div>
+  </div>
+
+  <script>
+    // Get form elements
+    const form = document.getElementById('key-value-form');
+    const keyInput = document.getElementById('key-input');
+    const valueInput = document.getElementById('value-input');
+    const writeButton = document.getElementById('write-button');
+    const readButton = document.getElementById('read-button');
+    const display = document.getElementById('key-value-display');
+    const displayKey = document.getElementById('display-key');
+    const displayValue = document.getElementById('display-value');
+
+    // Write key-value pair to endpoint
+    async function writeKeyValue(e) {
+      e.preventDefault();
+
+      // Get key and value from form
+      const key = keyInput.value;
+      const value = valueInput.value;
+
+      // Make POST request to write endpoint
+      const response = await fetch(
+        `/api/items/${key}?${new URLSearchParams({ item: value })} `,
+        { method: 'POST' }
+      );
+
+      // Clear form and show success message
+      form.reset();
+      alert('Key-value pair written successfully!');
+    }
+
+    // Read value from endpoint
+    async function readValue() {
+      // Get key from form
+      const key = keyInput.value;
+
+      // Make GET request to read endpoint
+      const response = await fetch(`/api/items/${key}`);
+      const data = await response.json();
+
+      // Display key and value
+      displayKey.textContent = key;
+      displayValue.textContent = data;
+      display.classList.remove('hidden');
+    }
+
+    // Add event listeners to form buttons
+    form.addEventListener('submit', writeKeyValue);
+    readButton.addEventListener('click', readValue);
+  </script>
+
+</body>
+
+</html>
